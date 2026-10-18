@@ -5,7 +5,6 @@
 
 #define SOM_DA_BOLA "sounds/beachball_bounce01.wav"
 
-
 const int altura = 500;
 const int largura = 1080;
 
@@ -72,10 +71,9 @@ void desenhar_placar(int placar_esquerda, int placar_direita){
 }
 
 
-void colisao(Bolinha *bolinha, raquete *Raquete_esquerda, raquete *Raquete_direita){
+void colisao(Bolinha *bolinha, raquete *Raquete_esquerda, raquete *Raquete_direita, Sound somBola){
     Rectangle recEsquerda = { Raquete_esquerda->pos.x, Raquete_esquerda->pos.y, Raquete_esquerda->largura, Raquete_esquerda->raltura };
     if (CheckCollisionCircleRec(bolinha->pos, bolinha->raio, recEsquerda)) {
-         Sound somBola = LoadSound(SOM_DA_BOLA);
         if (bolinha->vel.x < 0){
 
          bolinha->vel.x *= -1;
@@ -85,7 +83,6 @@ void colisao(Bolinha *bolinha, raquete *Raquete_esquerda, raquete *Raquete_direi
 
     Rectangle recDireita = { Raquete_direita->pos.x, Raquete_direita->pos.y, Raquete_direita->largura, Raquete_direita->raltura };
     if (CheckCollisionCircleRec(bolinha->pos, bolinha->raio, recDireita)) {
-        Sound somBola = LoadSound(SOM_DA_BOLA);
         if (bolinha->vel.x > 0){
         bolinha->vel.x *= -1;
          PlaySound(somBola);
@@ -110,10 +107,11 @@ int main(){
     InitWindow(largura, altura, "PONG");
     InitAudioDevice();
     SetTargetFPS(60);
+
     int placar_esquerdo = 0;
     int placar_direito = 0;
 
-
+    Sound somBola = LoadSound(SOM_DA_BOLA);
     Bolinha bolinha = {
         .pos = {
             .x = largura / 2,
@@ -165,7 +163,7 @@ int main(){
          if(!pause &&placar_direito < 10 && placar_esquerdo < 10){
         atualizar(&bolinha, &placar_esquerdo, &placar_direito);
         atualizar_raquetes(&Raquete_esquerda, &Raquete_direita);
-        colisao(&bolinha, &Raquete_esquerda, &Raquete_direita);
+        colisao(&bolinha, &Raquete_esquerda, &Raquete_direita, somBola);
          }
     
          BeginDrawing();
