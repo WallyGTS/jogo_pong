@@ -5,6 +5,8 @@
 
 #define SOM_DA_BOLA "sounds/beachball_bounce01.wav"
 #define SOM_DE_GOL "sounds/Sound Effect (6).wav"
+#define SOM_DE_VITORIA "sounds/0000000b.wav"
+
 const int altura = 500;
 const int largura = 1080;
 
@@ -42,18 +44,26 @@ void resetar_bolinha(Bolinha *bolinha){
     bolinha->pos.y = altura / 2;
     bolinha->vel.x *=-1;
 }
-void atualizar(Bolinha *bolinha, int *placar_esquerdo, int *placar_direito, Sound somGol){
+void atualizar(Bolinha *bolinha, int *placar_esquerdo, int *placar_direito, Sound somGol, Sound somVict){
     bolinha->pos.x += bolinha->vel.x;
     bolinha->pos.y += bolinha->vel.y;
     
     if (bolinha->pos.x + bolinha->raio >= largura){
         (*placar_esquerdo)++;
+    if(*placar_esquerdo == 10){
+        PlaySound(somVict);
+    }else {
         PlaySound(somGol);
-    resetar_bolinha(bolinha);
+    }
+        resetar_bolinha(bolinha);
     }
     else if(bolinha->pos.x - bolinha->raio <= 0){
         (*placar_direito)++;
-        PlaySound(somGol);
+        if(*placar_direito == 10){
+           PlaySound(somVict);
+      } else{
+           PlaySound(somGol);
+    }
         resetar_bolinha(bolinha);
     }
     if (bolinha->pos.y + bolinha->raio >= altura || bolinha->pos.y - bolinha->raio <= 0){
@@ -115,6 +125,7 @@ int main(){
 
     Sound somBola = LoadSound(SOM_DA_BOLA);
     Sound somGol = LoadSound(SOM_DE_GOL);
+    Sound somVict = LoadSound(SOM_DE_VITORIA);
 
     Bolinha bolinha = {
         .pos = {
@@ -165,7 +176,7 @@ int main(){
 
          pause = !pause;
          if(!pause &&placar_direito < 10 && placar_esquerdo < 10){
-        atualizar(&bolinha, &placar_esquerdo, &placar_direito, somGol);
+        atualizar(&bolinha, &placar_esquerdo, &placar_direito, somGol, somVict);
         atualizar_raquetes(&Raquete_esquerda, &Raquete_direita);
         colisao(&bolinha, &Raquete_esquerda, &Raquete_direita, somBola);
          }
