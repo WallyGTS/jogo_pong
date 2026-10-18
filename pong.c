@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 #define SOM_DA_BOLA "sounds/beachball_bounce01.wav"
+
 
 const int altura = 500;
 const int largura = 1080;
@@ -64,6 +64,11 @@ void desenhar_placar(int placar_esquerda, int placar_direita){
        DrawText(TextFormat("%d",placar_esquerda), 0.50 * largura -350, 30, 50, WHITE);
        DrawText(TextFormat("%d",placar_direita), 0.50 * largura +300 , 30, 50, WHITE);
        DrawLine(largura / 2, 0, largura / 2, altura, WHITE);
+       if(placar_esquerda == 10){
+        DrawText("JOGADOR 1 GANHOU!",0.50 * largura - 280,altura/2 - 20,50, BLUE);
+       } else if(placar_direita == 10){
+        DrawText("JOGADOR 2 GANHOU!",0.50 * largura - 280,altura/2 - 20,50, BLUE);
+       }
 }
 
 
@@ -157,7 +162,7 @@ int main(){
         if(IsKeyPressed(KEY_Q))
 
          pause = !pause;
-         if(!pause){
+         if(!pause &&placar_direito < 10 && placar_esquerdo < 10){
         atualizar(&bolinha, &placar_esquerdo, &placar_direito);
         atualizar_raquetes(&Raquete_esquerda, &Raquete_direita);
         colisao(&bolinha, &Raquete_esquerda, &Raquete_direita);
