@@ -184,7 +184,7 @@ int main(){
          BeginDrawing();
         ClearBackground(BLACK);
         if(pause)
-        DrawText("JOGO PAUSADO", 375, altura/2, 40, WHITE);
+        DrawText("JOGO PAUSADO", 335, altura/2, 50, WHITE);
             DrawLine(largura * 0.50, 0, largura * 0.50, altura,WHITE);
             desenhar(&bolinha);
             desenhar_raquete_esquerda(&Raquete_esquerda);
