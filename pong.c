@@ -44,15 +44,15 @@ void resetar_bolinha(Bolinha *bolinha){
     bolinha->pos.y = altura / 2;
 
     if(bolinha->vel.x > 0){
-        bolinha->vel.x = -15;
+        bolinha->vel.x = -13;
     } else {
-        bolinha->vel.x = 15;
+        bolinha->vel.x = 13;
     }
 
     if(bolinha->vel.y > 0){
-        bolinha->vel.y = 15;
+        bolinha->vel.y = 13;
     } else {
-        bolinha->vel.y = -15;
+        bolinha->vel.y = -13;
     }
 }
 
@@ -158,8 +158,8 @@ int main(){
             .y = altura / 2,
         },
         .vel = {
-            .x = 15,
-            .y = 15,
+            .x = 13,
+            .y = 13,
         },
         .raio = 25,
         .cor = WHITE
@@ -172,7 +172,7 @@ int main(){
         },
         .vel = {
             .x = 0,
-            .y = 24,
+            .y = 28,
         },
         .raltura = 80,
         .largura = 30,
@@ -186,7 +186,7 @@ int main(){
         },
         .vel = {
             .x = 0,
-            .y = 24,
+            .y = 28,
         },
         .raltura = 80,
         .largura = 30,
