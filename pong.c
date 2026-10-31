@@ -104,22 +104,22 @@ void colisao(Bolinha *bolinha, raquete *Raquete_esquerda, raquete *Raquete_direi
     if (CheckCollisionCircleRec(bolinha->pos, bolinha->raio, recEsquerda)) {
         if (bolinha->vel.x < 0){
             bolinha->vel.x *= -1;
-            bolinha->vel.x += 1; // Incrementa velocidade para a direita (+16, +17...)
+            bolinha->vel.x += 0.5;
 
             if(bolinha->vel.y > 0) bolinha->vel.y += 1;
-            else bolinha->vel.y -= 1;
+            else bolinha->vel.y -= 0.5;
             PlaySound(somBola);
         }
     } 
 
     Rectangle recDireita = { Raquete_direita->pos.x, Raquete_direita->pos.y, Raquete_direita->largura, Raquete_direita->raltura };
     if (CheckCollisionCircleRec(bolinha->pos, bolinha->raio, recDireita)) {
-        if (bolinha->vel.x > 0){
+           if (bolinha->vel.x > 0){
             bolinha->vel.x *= -1;
-            bolinha->vel.x -= 1; // Incrementa velocidade para a esquerda (-16, -17...)
+            bolinha->vel.x -= 0.5;
 
             if(bolinha->vel.y > 0) bolinha->vel.y += 1;
-            else bolinha->vel.y -= 1;
+            else bolinha->vel.y -= 0.5;
             PlaySound(somBola);
         } 
     }
@@ -137,6 +137,15 @@ void atualizar_raquetes(raquete *Raquete_esquerda, raquete *Raquete_direita){
         Raquete_direita->pos.y += Raquete_direita->vel.y;
 }
 
+void salvarArquivo(int placar_esquerdo, int placar_direito){
+    FILE *arq = fopen ("lista.txt", "w");
+    if(arq == NULL){
+        printf("Nao foi possivel salvar!");
+    } else{
+        fprintf(arq, "Jogador 1: %d Pontos\n", placar_esquerdo);
+        fprintf(arq, "Jogador 2: %d Pontos\n", placar_direito);
+    }
+}
 int main(){
     InitWindow(largura, altura, "PONG");
     InitAudioDevice();
@@ -144,6 +153,7 @@ int main(){
 
     int placar_esquerdo = 0;
     int placar_direito = 0;
+    float tem_msg = 0.0f;
 
     bool em_espera = true;
     float tempo_espera = 3.0f;
@@ -172,7 +182,7 @@ int main(){
         },
         .vel = {
             .x = 0,
-            .y = 28,
+            .y = 23,
         },
         .raltura = 80,
         .largura = 30,
@@ -186,7 +196,7 @@ int main(){
         },
         .vel = {
             .x = 0,
-            .y = 28,
+            .y = 23,
         },
         .raltura = 80,
         .largura = 30,
@@ -196,6 +206,10 @@ int main(){
     while(!WindowShouldClose()){
         if(IsKeyPressed(KEY_Q))
             pause = !pause;
+
+        if(tem_msg > 0){
+            tem_msg -= GetFrameTime();
+        }
 
         if(!pause && placar_direito < 10 && placar_esquerdo < 10){
             atualizar_raquetes(&Raquete_esquerda, &Raquete_direita);
@@ -208,6 +222,11 @@ int main(){
             } else {
                 atualizar(&bolinha, &placar_esquerdo, &placar_direito, somGol, somVict, &em_espera, &tempo_espera);
                 colisao(&bolinha, &Raquete_esquerda, &Raquete_direita, somBola);
+                if(IsKeyPressed(KEY_C)){
+                    salvarArquivo(placar_esquerdo, placar_direito);
+                    tem_msg = 1.0f;
+
+                }
             }
         }
     
@@ -216,14 +235,18 @@ int main(){
             DrawLine(largura * 0.50, 0, largura * 0.50, altura, WHITE);
             desenhar(&bolinha);
             if (pause)
-                DrawText("JOGO PAUSADO", 335, altura/2, 50, YELLOW);
+                DrawText("JOGO PAUSADO", 335, altura/2 - 10, 50, YELLOW);
+            DrawText("Pressione C para Salvar em Arquivo", 100, altura - 50, 20 ,WHITE);
             desenhar_raquete_esquerda(&Raquete_esquerda);
             desenhar_raquete_direita(&Raquete_direita);
             desenhar_placar(placar_esquerdo, placar_direito);
 
             if(placar_direito < 10 && placar_esquerdo < 10 && em_espera && !pause){
                 int segundos_restantes = (int)tempo_espera + 1;
-                DrawText(TextFormat("%d", segundos_restantes), largura/2 - 20, altura/2 - 20 , 80, YELLOW);
+                DrawText(TextFormat("%d", segundos_restantes), largura/2 - 20, altura/2 - 30 , 80, YELLOW);
+            }
+            if(tem_msg > 0){
+                DrawText("Placar Salvo!", largura/2 - 115, altura/2, 35, GREEN);
             }
         EndDrawing();
     }
