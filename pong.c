@@ -145,6 +145,7 @@ void salvarArquivo(int placar_esquerdo, int placar_direito){
         fprintf(arq, "Jogador 1: %d Pontos\n", placar_esquerdo);
         fprintf(arq, "Jogador 2: %d Pontos\n", placar_direito);
     }
+    fclose(arq);
 }
 int main(){
     InitWindow(largura, altura, "PONG");
