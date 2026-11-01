@@ -1,7 +1,0 @@
-<<<<<<< HEAD
-Jogador 1: 1 Pontos
-Jogador 2: 0 Pontos
-=======
-Jogador 1: 1 Pontos
-Jogador 2: 0 Pontos
->>>>>>> dbabbfe8571d4b2b1bd9238edde248ffb7cd0be7
