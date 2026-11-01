@@ -35,6 +35,13 @@ typedef struct Bolinha {
     Color cor;
 }Bolinha;
 
+typedef struct 
+{
+    int placar_esquerdo;
+    int placar_direito;
+}Placar;
+
+
 void desenhar(Bolinha *bolinha){
     DrawCircle(bolinha->pos.x, bolinha->pos.y, bolinha->raio, bolinha->cor);
 }
@@ -136,17 +143,28 @@ void atualizar_raquetes(raquete *Raquete_esquerda, raquete *Raquete_direita){
     if(IsKeyDown(KEY_DOWN) && Raquete_direita->pos.y + Raquete_direita->raltura < altura) 
         Raquete_direita->pos.y += Raquete_direita->vel.y;
 }
-
 void salvarArquivo(int placar_esquerdo, int placar_direito){
-    FILE *arq = fopen ("lista.txt", "w");
+    FILE *arq = fopen("lista.txt", "w");
     if(arq == NULL){
-        printf("Nao foi possivel salvar!");
+        printf("Erro ao Salvar!");
     } else{
-        fprintf(arq, "Jogador 1: %d Pontos\n", placar_esquerdo);
-        fprintf(arq, "Jogador 2: %d Pontos\n", placar_direito);
+        fprintf(arq, "Jogador 1 Pontos: %d\n",placar_esquerdo);
+        fprintf(arq, "Jogador 2 Pontos: %d\n",placar_direito);
     }
     fclose(arq);
 }
+void salvarArquivoBinario(int placar_esquerdo, int placar_direito){
+    FILE *arq = fopen ("lista_binario.txt", "wb");
+    if(arq == NULL){
+        printf("Erro ao Salvar!");
+    } else{
+        Placar p = {placar_esquerdo, placar_direito};
+        fwrite(&p, sizeof(Placar), 1, arq);
+    }
+    fclose(arq);
+}
+
+
 int main(){
     InitWindow(largura, altura, "PONG");
     InitAudioDevice();
@@ -228,6 +246,10 @@ int main(){
                     tem_msg = 1.0f;
 
                 }
+                if(IsKeyPressed(KEY_V)){
+                    salvarArquivoBinario(placar_esquerdo,placar_direito);
+                    tem_msg = 1.0f;
+                }
             }
         }
     
@@ -235,9 +257,8 @@ int main(){
             ClearBackground(BLACK);
             DrawLine(largura * 0.50, 0, largura * 0.50, altura, WHITE);
             desenhar(&bolinha);
-            if (pause)
-                DrawText("JOGO PAUSADO", 335, altura/2 - 10, 50, YELLOW);
             DrawText("Pressione C para Salvar em Arquivo", 100, altura - 50, 20 ,WHITE);
+            DrawText("Pressione V para Salvar em Arquivo Binario", 575, altura - 50, 20 ,WHITE);
             desenhar_raquete_esquerda(&Raquete_esquerda);
             desenhar_raquete_direita(&Raquete_direita);
             desenhar_placar(placar_esquerdo, placar_direito);
@@ -248,6 +269,10 @@ int main(){
             }
             if(tem_msg > 0){
                 DrawText("Placar Salvo!", largura/2 - 115, altura/2, 35, GREEN);
+            }
+            if (pause){
+                DrawRectangle(0,0, largura, altura, Fade(WHITE, 0.1f));
+                DrawText("JOGO PAUSADO", 335, altura/2 - 10, 50, YELLOW);
             }
         EndDrawing();
     }
