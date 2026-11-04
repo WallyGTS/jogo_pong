@@ -6,6 +6,7 @@
 #define SOM_DA_BOLA "sounds/beachball_bounce01.wav"
 #define SOM_DE_GOL "sounds/Sound Effect (6).wav"
 #define SOM_DE_VITORIA "sounds/0000000b.wav"
+#define SOM_DE_SAVE "sounds/coin.wav"
 
 const int altura = 500;
 const int largura = 1080;
@@ -180,6 +181,7 @@ int main(){
     Sound somBola = LoadSound(SOM_DA_BOLA);
     Sound somGol = LoadSound(SOM_DE_GOL);
     Sound somVict = LoadSound(SOM_DE_VITORIA);
+    Sound somSave = LoadSound(SOM_DE_SAVE);
 
     Bolinha bolinha = {
         .pos = {
@@ -244,11 +246,12 @@ int main(){
                 if(IsKeyPressed(KEY_C)){
                     salvarArquivo(placar_esquerdo, placar_direito);
                     tem_msg = 1.0f;
-
+                    PlaySound(somSave);
                 }
                 if(IsKeyPressed(KEY_V)){
                     salvarArquivoBinario(placar_esquerdo,placar_direito);
                     tem_msg = 1.0f;
+                    PlaySound(somSave);
                 }
             }
         }
