@@ -7,6 +7,7 @@
 #define SOM_DE_GOL "sounds/Sound Effect (6).wav"
 #define SOM_DE_VITORIA "sounds/0000000b.wav"
 #define SOM_DE_SAVE "sounds/coin.wav"
+#define SOM_DE_PAUSE "sounds/EXPRESS-6.wav"
 
 const int altura = 500;
 const int largura = 1080;
@@ -182,6 +183,7 @@ int main(){
     Sound somGol = LoadSound(SOM_DE_GOL);
     Sound somVict = LoadSound(SOM_DE_VITORIA);
     Sound somSave = LoadSound(SOM_DE_SAVE);
+    Sound somPause = LoadSound(SOM_DE_PAUSE);
 
     Bolinha bolinha = {
         .pos = {
@@ -212,7 +214,7 @@ int main(){
 
     raquete Raquete_direita = {
         .pos = {
-            .x = largura * 0.972,
+            .x = largura * 0.975,
             .y = (altura/2) - 40,
         },
         .vel = {
@@ -225,9 +227,10 @@ int main(){
     };
 
     while(!WindowShouldClose()){
-        if(IsKeyPressed(KEY_Q))
+        if(IsKeyPressed(KEY_Q)){
             pause = !pause;
-
+            PlaySound(somPause);
+        }
         if(tem_msg > 0){
             tem_msg -= GetFrameTime();
         }
@@ -279,6 +282,12 @@ int main(){
             }
         EndDrawing();
     }
+
+    UnloadSound(somBola);
+    UnloadSound(somGol);
+    UnloadSound(somPause);
+    UnloadSound(somSave);
+    UnloadSound(somVict);
 
     CloseAudioDevice();
     CloseWindow();
